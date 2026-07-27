@@ -9,7 +9,6 @@ const registerUser = async (req, res) => {
   try {
     const { name, email, password, role, department, phone } = req.body;
 
-    // Validate required fields
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -17,7 +16,6 @@ const registerUser = async (req, res) => {
       });
     }
 
-    // Validate email
     if (!validator.isEmail(email)) {
       return res.status(400).json({
         success: false,
@@ -25,7 +23,6 @@ const registerUser = async (req, res) => {
       });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
@@ -35,10 +32,8 @@ const registerUser = async (req, res) => {
       });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user
     const user = await User.create({
       name,
       email,
@@ -48,7 +43,6 @@ const registerUser = async (req, res) => {
       phone,
     });
 
-    // Remove password before sending response
     const userResponse = user.toObject();
     delete userResponse.password;
 
@@ -68,6 +62,58 @@ const registerUser = async (req, res) => {
   }
 };
 
+// =========================
+// Login User
+// =========================
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and Password are required",
+      });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid Email or Password",
+      });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid Email or Password",
+      });
+    }
+
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      user: userResponse,
+    });
+
+  } catch (error) {
+    console.error("Login Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
 module.exports = {
   registerUser,
+  loginUser,
 };
