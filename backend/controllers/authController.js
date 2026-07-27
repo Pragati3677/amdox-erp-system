@@ -2,12 +2,14 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const validator = require("validator");
 
+// =========================
 // Register User
+// =========================
 const registerUser = async (req, res) => {
   try {
     const { name, email, password, role, department, phone } = req.body;
 
-    // Validation
+    // Validate required fields
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -15,13 +17,15 @@ const registerUser = async (req, res) => {
       });
     }
 
+    // Validate email
     if (!validator.isEmail(email)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid email",
+        message: "Invalid email address",
       });
     }
 
+    // Check if user already exists
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
@@ -31,8 +35,10 @@ const registerUser = async (req, res) => {
       });
     }
 
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Create new user
     const user = await User.create({
       name,
       email,
@@ -42,17 +48,22 @@ const registerUser = async (req, res) => {
       phone,
     });
 
-    res.status(201).json({
+    // Remove password before sending response
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    return res.status(201).json({
       success: true,
       message: "User registered successfully",
-      user,
+      user: userResponse,
     });
-  } catch (error) {
-    console.error(error);
 
-    res.status(500).json({
+  } catch (error) {
+    console.error("Registration Error:", error);
+
+    return res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Internal Server Error",
     });
   }
 };
