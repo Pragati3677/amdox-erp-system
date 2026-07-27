@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const validator = require("validator");
+const jwt = require("jsonwebtoken");
 
 // =========================
 // Register User
@@ -9,6 +10,7 @@ const registerUser = async (req, res) => {
   try {
     const { name, email, password, role, department, phone } = req.body;
 
+    // Validate required fields
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -16,6 +18,7 @@ const registerUser = async (req, res) => {
       });
     }
 
+    // Validate email
     if (!validator.isEmail(email)) {
       return res.status(400).json({
         success: false,
@@ -23,6 +26,7 @@ const registerUser = async (req, res) => {
       });
     }
 
+    // Check if user already exists
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
@@ -32,8 +36,10 @@ const registerUser = async (req, res) => {
       });
     }
 
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Create user
     const user = await User.create({
       name,
       email,
@@ -43,6 +49,7 @@ const registerUser = async (req, res) => {
       phone,
     });
 
+    // Remove password from response
     const userResponse = user.toObject();
     delete userResponse.password;
 
@@ -69,6 +76,7 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Validate required fields
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -76,6 +84,7 @@ const loginUser = async (req, res) => {
       });
     }
 
+    // Find user
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -85,6 +94,7 @@ const loginUser = async (req, res) => {
       });
     }
 
+    // Compare password
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
@@ -94,12 +104,26 @@ const loginUser = async (req, res) => {
       });
     }
 
+    // Generate JWT Token
+    const token = jwt.sign(
+      {
+        id: user._id,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    // Remove password before sending response
     const userResponse = user.toObject();
     delete userResponse.password;
 
     return res.status(200).json({
       success: true,
       message: "Login successful",
+      token,
       user: userResponse,
     });
 
