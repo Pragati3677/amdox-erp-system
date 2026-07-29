@@ -1,15 +1,17 @@
 const express = require("express");
 const router = express.Router();
 
-const { addEmployee } = require("../controllers/employeeController");
+const {
+  addEmployee,
+  getEmployees,
+} = require("../controllers/employeeController");
+
 const protect = require("../middleware/authMiddleware");
 
-console.log("protect =", protect);
-console.log("typeof protect =", typeof protect);
+// Get All Employees
+router.get("/", protect, getEmployees);
 
-console.log("addEmployee =", addEmployee);
-console.log("typeof addEmployee =", typeof addEmployee);
-
+// Add Employee
 router.post("/", protect, addEmployee);
 
 module.exports = router;

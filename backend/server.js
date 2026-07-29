@@ -16,12 +16,6 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-// Debug
-console.log("authRoutes:", authRoutes);
-console.log("employeeRoutes:", employeeRoutes);
-
-console.log("typeof authRoutes:", typeof authRoutes);
-console.log("typeof employeeRoutes:", typeof employeeRoutes);
 
 // Routes
 app.use("/api/auth", authRoutes);

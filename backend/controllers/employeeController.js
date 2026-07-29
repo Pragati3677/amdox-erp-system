@@ -1,8 +1,5 @@
 const Employee = require("../models/Employee");
 
-console.log("Employee =", Employee);
-console.log("typeof Employee =", typeof Employee);
-
 const addEmployee = async (req, res) => {
   try {
     const employee = await Employee.create(req.body);
@@ -22,6 +19,25 @@ const addEmployee = async (req, res) => {
   }
 };
 
+// Get All Employees
+const getEmployees = async (req, res) => {
+  try {
+    const employees = await Employee.find();
+
+    res.status(200).json({
+      success: true,
+      count: employees.length,
+      employees,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   addEmployee,
+  getEmployees,
 };
