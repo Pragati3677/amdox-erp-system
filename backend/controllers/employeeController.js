@@ -37,7 +37,33 @@ const getEmployees = async (req, res) => {
   }
 };
 
+// Get Employee By ID
+const getEmployeeById = async (req, res) => {
+  try {
+    const employee = await Employee.findById(req.params.id);
+
+    if (!employee) {
+      return res.status(404).json({
+        success: false,
+        message: "Employee not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      employee,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   addEmployee,
   getEmployees,
+  getEmployeeById,
 };
