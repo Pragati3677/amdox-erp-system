@@ -4,6 +4,7 @@ const connectDB = require("./config/db");
 
 // Routes
 const authRoutes = require("./routes/authRoutes");
+const employeeRoutes = require("./routes/employeeRoutes");
 
 dotenv.config();
 
@@ -15,8 +16,16 @@ const app = express();
 // Middleware
 app.use(express.json());
 
+// Debug
+console.log("authRoutes:", authRoutes);
+console.log("employeeRoutes:", employeeRoutes);
+
+console.log("typeof authRoutes:", typeof authRoutes);
+console.log("typeof employeeRoutes:", typeof employeeRoutes);
+
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/employees", employeeRoutes);
 
 // Test Route
 app.get("/", (req, res) => {
