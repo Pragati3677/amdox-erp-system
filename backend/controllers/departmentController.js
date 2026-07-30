@@ -22,6 +22,26 @@ const addDepartment = async (req, res) => {
   }
 };
 
+// Get All Departments
+const getDepartments = async (req, res) => {
+
+  try {
+    const departments = await Department.find();
+
+    res.status(200).json({
+      success: true,
+      count: departments.length,
+      departments,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   addDepartment,
+  getDepartments,
 };
