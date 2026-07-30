@@ -65,8 +65,43 @@ const getDepartmentById = async (req, res) => {
   }
 };
 
+// Update Department
+const updateDepartment = async (req, res) => {
+  try {
+    const department = await Department.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!department) {
+      return res.status(404).json({
+        success: false,
+        message: "Department not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Department updated successfully",
+      department,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+
 module.exports = {
   addDepartment,
   getDepartments,
   getDepartmentById,
+  updateDepartment,
 };
