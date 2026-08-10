@@ -5,6 +5,7 @@ const {
   addDesignation,
   getDesignations,
   getDesignationById,
+  updateDesignation,
 } = require("../controllers/designationController");
 
 const protect = require("../middleware/authMiddleware");
@@ -19,5 +20,8 @@ router.get("/", protect, getDesignations);
 
 // Get Designation By ID
 router.get("/:id", protect, getDesignationById);
+
+// Update Designation
+router.put("/:id", protect, updateDesignation);
 
 module.exports = router;

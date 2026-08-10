@@ -68,8 +68,45 @@ const getDesignationById = async (req, res) => {
   }
 };
 
+// Update Designation
+const updateDesignation = async (req, res) => {
+  try {
+    const designation = await Designation.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    ).populate("department", "departmentName");
+
+    if (!designation) {
+      return res.status(404).json({
+        success: false,
+        message: "Designation not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Designation updated successfully",
+      designation,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+
 module.exports = {
   addDesignation,
   getDesignations,
   getDesignationById,
+  updateDesignation,
 };
