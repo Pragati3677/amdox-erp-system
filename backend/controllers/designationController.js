@@ -102,6 +102,31 @@ const updateDesignation = async (req, res) => {
   }
 };
 
+// Delete Designation
+const deleteDesignation = async (req, res) => {
+  try {
+    const designation = await Designation.findByIdAndDelete(req.params.id);
+
+    if (!designation) {
+      return res.status(404).json({
+        success: false,
+        message: "Designation not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Designation deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 
 module.exports = {
@@ -109,4 +134,5 @@ module.exports = {
   getDesignations,
   getDesignationById,
   updateDesignation,
+  deleteDesignation,
 };
