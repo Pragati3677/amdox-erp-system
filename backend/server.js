@@ -9,6 +9,7 @@ const departmentRoutes = require("./routes/departmentRoutes");
 const designationRoutes = require("./routes/designationRoutes");
 const attendanceRoutes = require("./routes/attendanceRoutes");
 const leaveRoutes = require("./routes/leaveRoutes");
+const payrollRoutes = require("./routes/payrollRoutes");
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use("/api/departments", departmentRoutes);
 app.use("/api/designations", designationRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/leaves", leaveRoutes);
+app.use("/api/payroll", payrollRoutes);
 
 // Test Route
 app.get("/", (req, res) => {
