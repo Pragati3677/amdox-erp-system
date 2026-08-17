@@ -11,7 +11,7 @@ const {
 
 const protect = require("../middleware/authMiddleware");
 
-console.log("Leave Routes File Loaded");
+
 
 // Add Leave
 router.post("/", protect, addLeave);

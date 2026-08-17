@@ -11,7 +11,7 @@ const {
 
 const protect = require("../middleware/authMiddleware");
 
-console.log("Designation Routes File Loaded");
+
 
 // Add Designation
 router.post("/", protect, addDesignation);

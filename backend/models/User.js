@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-console.log("User.js Loaded");
+
 
 const userSchema = new mongoose.Schema(
   {

@@ -11,7 +11,7 @@ const {
 
 const protect = require("../middleware/authMiddleware");
 
-console.log("Attendance Routes File Loaded");
+
 
 // Add Attendance
 router.post("/", protect, addAttendance);

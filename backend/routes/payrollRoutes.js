@@ -11,7 +11,7 @@ const {
 
 const protect = require("../middleware/authMiddleware");
 
-console.log("Payroll Routes File Loaded");
+
 
 // Add Payroll
 router.post("/", protect, addPayroll);
