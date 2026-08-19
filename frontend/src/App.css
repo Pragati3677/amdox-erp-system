@@ -8,8 +8,6 @@ body {
   background: #f4f6f9;
 }
 
-/* Login */
-
 .login-page {
   min-height: 100vh;
   display: flex;
@@ -39,7 +37,6 @@ body {
 
 .login-header p {
   color: #666;
-  margin-top: 8px;
 }
 
 .form-group {
@@ -60,11 +57,6 @@ body {
   font-size: 15px;
 }
 
-.form-group input:focus {
-  outline: none;
-  border-color: #2563eb;
-}
-
 .login-button {
   width: 100%;
   padding: 13px;
@@ -81,11 +73,6 @@ body {
   background: #1d4ed8;
 }
 
-.login-button:disabled {
-  background: #9ca3af;
-  cursor: not-allowed;
-}
-
 .error-message {
   background: #fee2e2;
   color: #b91c1c;
@@ -94,42 +81,12 @@ body {
   margin-bottom: 20px;
 }
 
-/* Dashboard */
-
 .dashboard {
   min-height: 100vh;
 }
 
-.navbar {
-  height: 70px;
-  background: #1e3a8a;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 30px;
-}
-
-.navbar h2 {
-  margin: 0;
-}
-
-.navbar button {
-  border: none;
-  padding: 9px 18px;
-  border-radius: 6px;
-  background: white;
-  color: #1e3a8a;
-  font-weight: 600;
-  cursor: pointer;
-}
-
 .dashboard-content {
   padding: 40px;
-}
-
-.dashboard-content h1 {
-  margin-bottom: 8px;
 }
 
 .dashboard-cards {
@@ -146,15 +103,6 @@ body {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
-.dashboard-card h3 {
-  margin-top: 0;
-  color: #1e3a8a;
-}
-
-.dashboard-card p {
-  color: #666;
-}
-
 @media (max-width: 900px) {
   .dashboard-cards {
     grid-template-columns: repeat(2, 1fr);
@@ -168,9 +116,5 @@ body {
 
   .dashboard-cards {
     grid-template-columns: 1fr;
-  }
-
-  .dashboard-content {
-    padding: 20px;
   }
 }

@@ -1,69 +1,29 @@
 import { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
+import "./Auth.css";
 
-function Login() {
+export default function Login() {
+  const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setError("");
     setLoading(true);
-
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        formData
-      );
-
-      console.log("Login response:", response.data);
-
-      if (response.data.success) {
-        const token =
-          response.data.token ||
-          response.data.user?.token ||
-          response.data.data?.token;
-
-        if (!token) {
-          setError("Login successful, but token was not received.");
-          return;
-        }
-
-        localStorage.setItem("token", token);
-
-        if (response.data.user) {
-          localStorage.setItem(
-            "user",
-            JSON.stringify(response.data.user)
-          );
-        }
-
-        navigate("/dashboard");
-      } else {
-        setError(response.data.message || "Login failed.");
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-
+      await login(email, password);
+      const redirectTo = location.state?.from || "/dashboard";
+      navigate(redirectTo, { replace: true });
+    } catch (err) {
       setError(
-        error.response?.data?.message ||
-          "Unable to connect to the server."
+        err.response?.data?.message || "Couldn't log in. Check your details and try again."
       );
     } finally {
       setLoading(false);
@@ -71,63 +31,47 @@ function Login() {
   };
 
   return (
-    <div className="login-page">
-
-      <div className="login-card">
-
-        <div className="login-header">
-          <h1>Amdox-ERP</h1>
-          <p>Employee Management System</p>
-        </div>
+    <div className="auth-screen">
+      <div className="auth-card">
+        <span className="auth-mark">AMDOX</span>
+        <span className="auth-tag">Log in to your ERP workspace</span>
 
         <form onSubmit={handleSubmit}>
+          {error && <p className="error-text">{error}</p>}
 
-          {error && (
-            <div className="error-message">
-              {error}
-            </div>
-          )}
-
-          <div className="form-group">
-            <label>Email</label>
-
+          <div className="field">
+            <label htmlFor="email">Email</label>
             <input
+              id="email"
               type="email"
-              name="email"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleChange}
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
 
-          <div className="form-group">
-            <label>Password</label>
-
+          <div className="field">
+            <label htmlFor="password">Password</label>
             <input
+              id="password"
               type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
 
-          <button
-            type="submit"
-            className="login-button"
-            disabled={loading}
-          >
-            {loading ? "Logging in..." : "Login"}
+          <button type="submit" className="btn btn-primary auth-submit" disabled={loading}>
+            {loading ? "Logging in…" : "Log in"}
           </button>
-
         </form>
 
+        <p className="auth-footer">
+          Don't have an account? <Link to="/register">Register</Link>
+        </p>
       </div>
-
     </div>
   );
 }
-
-export default Login;

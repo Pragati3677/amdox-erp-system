@@ -1,38 +1,118 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
+
+import Layout from "./components/Layout";
+
+import ProtectedRoute from "./components/ProtectedRoute";
+
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import Employees from "./pages/Employees";
+import Departments from "./pages/Departments";
+import Designations from "./pages/Designations";
+import Attendance from "./pages/Attendance";
+import Leaves from "./pages/Leaves";
+import Payroll from "./pages/Payroll";
 
 function App() {
-  const token = localStorage.getItem("token");
-
   return (
-    <BrowserRouter>
-      <Routes>
+    <Routes>
+      <Route
+        path="/login"
+        element={<Login />}
+      />
 
-        {/* Login */}
+      <Route
+        path="/register"
+        element={<Register />}
+      />
+
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Layout />
+          </ProtectedRoute>
+        }
+      >
         <Route
-          path="/login"
+          index
           element={
-            token ? <Navigate to="/dashboard" replace /> : <Login />
+            <Navigate
+              to="/dashboard"
+              replace
+            />
           }
         />
 
-        {/* Dashboard */}
         <Route
-          path="/dashboard"
+          path="dashboard"
+          element={<Dashboard />}
+        />
+
+        <Route
+          path="employees"
+          element={<Employees />}
+        />
+
+        <Route
+          path="departments"
           element={
-            token ? <Dashboard /> : <Navigate to="/login" replace />
+            <ProtectedRoute
+              roles={["Admin", "HR"]}
+            >
+              <Departments />
+            </ProtectedRoute>
           }
         />
 
-        {/* Default route */}
         <Route
-          path="*"
-          element={<Navigate to="/login" replace />}
+          path="designations"
+          element={
+            <ProtectedRoute
+              roles={["Admin", "HR"]}
+            >
+              <Designations />
+            </ProtectedRoute>
+          }
         />
 
-      </Routes>
-    </BrowserRouter>
+        <Route
+          path="attendance"
+          element={<Attendance />}
+        />
+
+        <Route
+          path="leaves"
+          element={<Leaves />}
+        />
+
+        <Route
+          path="payroll"
+          element={
+            <ProtectedRoute
+              roles={["Admin", "HR"]}
+            >
+              <Payroll />
+            </ProtectedRoute>
+          }
+        />
+      </Route>
+
+      <Route
+        path="*"
+        element={
+          <Navigate
+            to="/dashboard"
+            replace
+          />
+        }
+      />
+    </Routes>
   );
 }
 

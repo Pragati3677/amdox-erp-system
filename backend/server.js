@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
@@ -19,8 +20,15 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
+app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
